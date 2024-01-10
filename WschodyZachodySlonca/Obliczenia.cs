@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace WschodyZachodySlonca
 {
@@ -10,29 +6,27 @@ namespace WschodyZachodySlonca
     {
         #region stale
 
-        const int mnozRok = 367;
+        const int maxSzerokoscGeo = 90;
 
-        const int mnozNowyRok = 7;
+        const int maxDlugoscGeo = 180;
 
-        const int dalejNizLuty = 1;
+        const int maxDniDlugiMsc = 31;
 
-        const int dzielNowyRok = 4;
+        const int maxDniKrotkiMsc = 30;
 
-        const int mnozMiesiac = 275;
+        const int maxDniLuty = 28;
 
-        const int dzielMiesiac = 9;
+        const int maxDniLutyPrzestepny = 29;
 
-        const double stalaA = 730531.5;
+        const int pierwszyDzien = 1;
 
-        const int stalaB = 36525;
-
-        const double Wys = -0.833;
+        const int ileSekWMin = 60;
 
         #endregion
 
         #region zmienne
 
-        double a, b, c, d, f, g, h, rad, wiek, Wschod, Zachod;
+        public static bool korekcjaBledu = true;
 
         int oldSeconds = 0, seconds;
 
@@ -42,9 +36,9 @@ namespace WschodyZachodySlonca
 
         public DateTime data { get; set; }
 
-        public static double szerokoscGeo { get; set; }
+        public double szerokoscGeo { get; set; }
 
-        public static double dlugoscGeo { get; set; }
+        public double dlugoscGeo { get; set; }
 
         #endregion
 
@@ -59,36 +53,44 @@ namespace WschodyZachodySlonca
 
         #endregion
 
-        public static void UstawWspolrzedneGeo()
+        /// <summary>
+        /// Ustawia wspolrzedne geograficzne obiektu odczytujac wejscie z klawiatury.
+        /// </summary>
+        public void UstawWspolrzedneGeo()
         {
             Console.Clear();
 
-            double help = double.MaxValue;
+            double input;
 
             Console.WriteLine("Uwaga! Liczby niecałkowite podajemy z przecinkiem, a nie kropką!" +
                 "\nWprowadz szerokosc geograficzna w stopniach z minutami po przecinku." +
-                "\nDla N wartosci dodatnie, dla S wartosci ujemne (-90;90):");
+                $"\nDla N wartosci dodatnie, dla S wartosci ujemne (-{maxSzerokoscGeo};{maxSzerokoscGeo}):");
 
-            while (!double.TryParse(Console.ReadLine(), out help) || help < -90 || help > 90)
+            while (!double.TryParse(Console.ReadLine(), out input) || input < -maxSzerokoscGeo || input > maxSzerokoscGeo)
                 continue;
-            szerokoscGeo = help;
+            szerokoscGeo = input;
 
             Console.WriteLine("\nWprowadz dlugosc geograficzna w stopniach z minutami po przecinku." +
-                "\nDla E wartosci dodatnie, dla W wartosci ujemne (-180;180):");
+                $"\nDla E wartosci dodatnie, dla W wartosci ujemne (-{maxDlugoscGeo};{maxDlugoscGeo}):");
 
-
-            while (!double.TryParse(Console.ReadLine(), out help) || help < -180 || help > 180)
+            while (!double.TryParse(Console.ReadLine(), out input) || input < -maxDlugoscGeo || input > maxDlugoscGeo)
                 continue;
-            dlugoscGeo = help;
+            dlugoscGeo = input;
 
-            Console.WriteLine($"\nSzerokość geograficzna to: {szerokoscGeo}.\nDługość geograficzna to: {dlugoscGeo}." +
-                $"\n\nNacisnij Enter, aby kontynuowac...");
-            Console.ReadLine();
+            Console.WriteLine($"\nSzerokość geograficzna to: {szerokoscGeo}.\nDługość geograficzna to: {dlugoscGeo}.");
+            Kontynuuj();
         }
 
+        /// <summary>
+        /// Zwraca false jesli dzien nie istnieje w kalendarzu. W innym przypadku zwraca true.
+        /// </summary>
+        /// <param name="dzien">Dzien miesiaca</param>
+        /// <param name="miesiac">Miesiac</param>
+        /// <param name="rok">Rok</param>
+        /// <returns>Zwraca true, jesli dzien istnieje. W innym wypadku false.</returns>
         public bool SprawdzCzyDzienIstnieje(int dzien, int miesiac, int rok)
         {
-            if (dzien < 1)
+            if (dzien < pierwszyDzien)
                 return false;
 
             switch (miesiac)
@@ -100,29 +102,38 @@ namespace WschodyZachodySlonca
                 case 8:
                 case 10:
                 case 12:
-                    if (dzien > 31)
-                        return false;
-                    else
+                    if (dzien <= maxDniDlugiMsc)
                         return true;
+                    else
+                        return false;
                 case 2:
-                    if (dzien > 28 || DateTime.IsLeapYear(rok) && dzien == 29)
-                        return false;
-                    else
+                    if (dzien <= maxDniLuty || (DateTime.IsLeapYear(rok) && dzien == maxDniLutyPrzestepny))
                         return true;
+                    else
+                        return false;
                 default:
-                    if (dzien > 30)
-                        return false;
-                    else
+                    if (dzien <= maxDniKrotkiMsc)
                         return true;
+                    else
+                        return false;
             }
         }
 
-        public void ObliczWschodZachod(int dzien, int miesiac, int rok, bool korekcja = true, bool wschod = false, int mode = 0)
+        /// <summary>
+        /// Oblicza wschod badz zachod slonca i wyswietla jego wartosc.
+        /// </summary>
+        /// <param name="dzien">Dzien miesiaca</param>
+        /// <param name="miesiac">Miesiac</param>
+        /// <param name="rok">Rok</param>
+        /// <param name="korekcja">Czy korekcja bledu jest wlaczona?</param>
+        /// <param name="wschod">Czy obliczany jest wschod? Jesli nie liczymy zachod.</param>
+        /// <param name="czyDzienPoprzedni">Czy liczymy czas dla dnia poprzedniego?</param>
+        public void ObliczWschodZachod(DateTime data, bool wschod = false, int czyDzienPoprzedni = 0)
         {
-            double N1 = Math.Floor(275d * miesiac / 9);
-            double N2 = Math.Floor((miesiac + 9d) / 12);
-            double N3 = 1 + Math.Floor((rok - (4 * Math.Floor(rok / 4d)) + 2) / 3);
-            double N = N1 - (N2 * N3) + dzien - 30;
+            double N1 = Math.Floor(275d * data.Month / 9);
+            double N2 = Math.Floor((data.Month + 9d) / 12);
+            double N3 = 1 + Math.Floor((data.Year - (4 * Math.Floor(data.Year / 4d)) + 2) / 3);
+            double N = N1 - (N2 * N3) + data.Day - 30;
             double zenith = 90.83333333333333;
             double D2R = Math.PI / 180d;
             double R2D = 180d / Math.PI;
@@ -195,20 +206,16 @@ namespace WschodyZachodySlonca
             double localT = UT + offset;
             seconds = (int)(localT * 3600);
 
-            if (korekcja)
-                seconds += KorekcjaBledu(wschod, miesiac);
+            if (korekcjaBledu)
+                seconds += KorekcjaBledu(wschod, data.Month);
 
             double sec = seconds % 60;
             double minutes = seconds % 3600 / 60;
             double hours = seconds % 86400 / 3600;
-            if (TimeZoneInfo.Local.IsDaylightSavingTime(new DateTime(rok, miesiac, dzien, 12, 0, 0)))
+            if (TimeZoneInfo.Local.IsDaylightSavingTime(new DateTime(data.Year, data.Month, data.Day, 12, 0, 0)))
                 hours += 1;
-            //hours = hours % 12;
 
-            //Tutaj zrobic, ze jesli wybieramy wylistowanie calego miesiaca albo roku, to niech wylicza roznica miedzy aktualnym,
-            //a poprzednim dniem.
-            //Potem jeszcze trzeba dodac cos takiego dla wywolania obliczenia pojedynczego dnia.
-            if (mode == 2)
+            if (czyDzienPoprzedni == 1)
             {
                 oldSeconds = seconds;
                 return;
@@ -229,19 +236,14 @@ namespace WschodyZachodySlonca
             {
                 Console.WriteLine($"Zachod o: {hours}h {minutes}min. {sec}sec.\nZachod pozniej o: {minuty}min. i {sekundy}sec.\n");
             }
-
-            //Console.WriteLine($"Dla {dzien}.{miesiac}.{data.Year} ({szerokoscGeo}N {dlugoscGeo}E):\nWschod slonca o: ?h. ?min. ?sec.\nZachod slonca o: {hours}h. {minutes}min. {sec}sec." +
-            //    $"\nDlugosc dnia: ?h ?min. ?sec.\n");
-
-            //Console.WriteLine($"Dla {dzien}.{miesiac}.{data.Year} ({szerokoscGeo}N {dlugoscGeo}E):\nWschod slonca o: {Math.Floor(Wschod)}h. {Math.Round(Math.Truncate(Wschod)*100/60, 2)}min.\nZachod slonca o: {Math.Floor(Zachod)}h. {Math.Round(Math.Truncate(Zachod)*100/60, 2)}min." +
-            //    $"\nDlugosc dnia: {Math.Floor(Zachod-Wschod)}h {Math.Round((Math.Truncate(Zachod-Wschod))*100/60, 2)}min.\n");
-
-            //if (mode == 0 && wschod == false)
-            //{
-            //    Kontynuuj();
-            //}
         }
 
+        /// <summary>
+        /// Zwraca wartosc korekcji bledu dla danego miesiaca.
+        /// </summary>
+        /// <param name="wschod">Czy korekcja jest dla wschodu slonca? Jesli nie to korekcja dla zachodu.</param>
+        /// <param name="miesiac">Dla ktorego miesiaca korekcja?</param>
+        /// <returns>Zwraca wartosc korekcji czasu w sekundach.</returns>
         public int KorekcjaBledu(bool wschod, int miesiac)
         {
             if (wschod)
@@ -249,29 +251,29 @@ namespace WschodyZachodySlonca
                 switch (miesiac)
                 {
                     case 1:
-                        return 2 * 60;
+                        return 2 * ileSekWMin;
                     case 2:
-                        return (int)(0.5 * 60);
+                        return (int)(0.5 * ileSekWMin);
                     case 3:
-                        return (int)(-0.5 * 60);
+                        return (int)(-0.5 * ileSekWMin);
                     case 4:
-                        return -1 * 60;
+                        return -1 * ileSekWMin;
                     case 5:
-                        return -2 * 60;
+                        return -2 * ileSekWMin;
                     case 6:
-                        return -1 * 60;
+                        return -1 * ileSekWMin;
                     case 7:
-                        return 0 * 60;
+                        return 0 * ileSekWMin;
                     case 8:
-                        return 1 * 60;
+                        return 1 * ileSekWMin;
                     case 9:
-                        return 2 * 60;
+                        return 2 * ileSekWMin;
                     case 10:
-                        return (int)(2.5 * 60);
+                        return (int)(2.5 * ileSekWMin);
                     case 11:
-                        return 3 * 60;
+                        return 3 * ileSekWMin;
                     case 12:
-                        return (int)(3.5 * 60);
+                        return (int)(3.5 * ileSekWMin);
                     default:
                         break;
                 }
@@ -281,29 +283,29 @@ namespace WschodyZachodySlonca
                 switch (miesiac)
                 {
                     case 1:
-                        return -1 * 60;
+                        return -1 * ileSekWMin;
                     case 2:
-                        return 0 * 60;
+                        return 0 * ileSekWMin;
                     case 3:
-                        return 1 * 60;
+                        return 1 * ileSekWMin;
                     case 4:
-                        return 2 * 60;
+                        return 2 * ileSekWMin;
                     case 5:
-                        return 3 * 60;
+                        return 3 * ileSekWMin;
                     case 6:
-                        return 4 * 60;
+                        return 4 * ileSekWMin;
                     case 7:
-                        return (int)(3.5 * 60);
+                        return (int)(3.5 * ileSekWMin);
                     case 8:
-                        return (int)(2.5 * 60);
+                        return (int)(2.5 * ileSekWMin);
                     case 9:
-                        return 1 * 60;
+                        return 1 * ileSekWMin;
                     case 10:
-                        return 0 * 60;
+                        return 0 * ileSekWMin;
                     case 11:
-                        return (int)(-0.5 * 60);
+                        return (int)(-0.5 * ileSekWMin);
                     case 12:
-                        return -1 * 60;
+                        return -1 * ileSekWMin;
                     default:
                         break;
                 }
@@ -311,12 +313,18 @@ namespace WschodyZachodySlonca
             return 0;
         }
 
+        /// <summary>
+        /// Stopuje wiersz wywolania polecen.
+        /// </summary>
         public void Kontynuuj()
         {
             Console.WriteLine("Nacisnij Enter, aby kontynuowac...");
             Console.ReadLine();
         }
 
+        /// <summary>
+        /// Pozwala zmienic rok i miesiac obecnej daty.
+        /// </summary>
         public void UstawDate()
         {
             Console.Clear();
@@ -340,10 +348,21 @@ namespace WschodyZachodySlonca
                 data = data.Date.AddYears(rok - data.Year).AddMonths(miesiac - data.Month);
 
                 Console.WriteLine($"Nowa data to: {data.Year}.{data.Month}\n");
-                Console.WriteLine($"Nacisnij Enter, aby kontynuowac...");
-                Console.ReadLine();
+                Kontynuuj();
                 break;
             }
+        }
+
+        /// <summary>
+        /// Sprawdza ustawiona date i wspolrzedne geograficzne danego obiektu.
+        /// </summary>
+        /// <param name="obl">Obiekt, dla ktorego chcemy sprawdzic ustawiona date oraz wspolrzedne geograficzne.</param>
+        public static void SprawdzDane(Obliczenia obl)
+        {
+            Console.Clear();
+            Console.WriteLine($"Aktualna data to: {obl.data.Year}Y {obl.data.Month}M\n" +
+                $"Aktualne wspolrzedne geograficzne to (szerokosc, dlugosc): {obl.szerokoscGeo}N {obl.dlugoscGeo}E");
+            obl.Kontynuuj();
         }
     }
 }

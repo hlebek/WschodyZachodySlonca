@@ -2,16 +2,7 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
-        {
-            Obliczenia obl = new Obliczenia();
-            bool korekcja = true;
-
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine($"Czesc\nCo chcesz zrobic?\n\nKorekcja bledu wlaczona? [{korekcja}]\n" +
-                    "\n1. Sprawdz aktualnie ustawiona date i wspolrzedne geograficzne" +
+        static string opcjeMenu = "\n1. Sprawdz aktualnie ustawiona date i wspolrzedne geograficzne" +
                     "\n2. Zmien date" +
                     "\n3. Zmien wspolrzedne geograficzne" +
                     "\n4. Oblicz wschod i zachod slonca dla danego dnia" +
@@ -19,46 +10,70 @@
                     "\n6. Oblicz wschod i zachod slonca dla calego roku" +
                     "\n7. Zmien ustawienie korekcji bledu zalamania swiatla" +
                     "\n8. Info o programie\n" +
-                    "\n9. Wyjdz z programu.\n");
+                    "\n9. Wyjdz z programu.\n";
 
-                //Console.WriteLine($"Sin(90): {Math.Sin(90 * Math.PI / 180)}" +
-                //    $"\nSin(180): {Math.Sin(180 * Math.PI / 180)}");
+        const int minOpcji = 1;
+        static int maxOpcji = opcjeMenu.Count(c => c.Equals('\n')) - 2;
+
+        static void Main(string[] args)
+        {
+            Obliczenia obl = new Obliczenia();
+
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"Czesc\nCo chcesz zrobic?\n\nKorekcja bledu wlaczona? [{Obliczenia.korekcjaBledu}]\n" + Program.opcjeMenu);
 
                 int wyborMenu;
-                if (!int.TryParse(Console.ReadLine(), out wyborMenu) || wyborMenu < 1 || wyborMenu > 7)
+                if (!int.TryParse(Console.ReadLine(), out wyborMenu) || wyborMenu < minOpcji || wyborMenu > maxOpcji)
                 {
-                    Console.WriteLine("Niepoprawna wartosc!");
+                    continue;
                 }
 
                 switch (wyborMenu)
                 {
                     case 1:
-                        SprawdzDane(obl);
+                        Obliczenia.SprawdzDane(obl);
                         break;
                     case 2:
                         obl.UstawDate();
                         break;
                     case 3:
-                        Obliczenia.UstawWspolrzedneGeo();
+                        obl.UstawWspolrzedneGeo();
                         break;
                     case 4:
                         Console.Clear();
                         Console.WriteLine($"Podaj dzien z {obl.data.Month} miesiaca:");
-                        int help;
+                        int input;
                         while (true)
                         {
-                            if (int.TryParse(Console.ReadLine(), out help))
+                            if (int.TryParse(Console.ReadLine(), out input))
                             {
-                                if (!obl.SprawdzCzyDzienIstnieje(help, obl.data.Month, obl.data.Year))
+                                if (!obl.SprawdzCzyDzienIstnieje(input, obl.data.Month, obl.data.Year))
                                 {
+                                    Console.WriteLine("\nDzien nie istnieje!\nNacisnij Enter, aby kontynuowac.");
+                                    Console.ReadLine();
                                     break;
                                 }
-                                DateTime dzienPrzed = new DateTime(obl.data.Year, obl.data.Month, help).AddDays(-1);
-                                Console.WriteLine($"Dla {help}.{obl.data.Month}.{obl.data.Year} ({Obliczenia.szerokoscGeo}N {Obliczenia.dlugoscGeo}E):");
-                                obl.ObliczWschodZachod(dzienPrzed.Day, dzienPrzed.Month, dzienPrzed.Year, korekcja, true, 2);
-                                obl.ObliczWschodZachod(help, obl.data.Month, obl.data.Year, korekcja, true);
-                                obl.ObliczWschodZachod(dzienPrzed.Day, dzienPrzed.Month, dzienPrzed.Year, korekcja, false, 2);
-                                obl.ObliczWschodZachod(help, obl.data.Month, obl.data.Year, korekcja, false);
+                                Console.WriteLine($"Dla {input}.{obl.data.Month}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
+
+                                // xx = k
+                                // 00 = 0
+                                // 01 = 1
+                                // 10 = 2
+                                // 11 = 3
+                                for (int k = 3; k >= 0; k--)
+                                {
+                                    string str = Convert.ToString(k, 2).PadLeft(2, '0');
+                                    char[] charArr = str.ToCharArray();
+
+                                    obl.ObliczWschodZachod(obl.data.AddDays(-(int)char.GetNumericValue(charArr[1])),
+                                        Convert.ToBoolean((int)char.GetNumericValue(charArr[0])), (int)char.GetNumericValue(charArr[1]));
+                                }
+                                //obl.ObliczWschodZachod(obl.data.AddDays(-1), Convert.ToBoolean(1), 1);
+                                //obl.ObliczWschodZachod(obl.data, Convert.ToBoolean(1), 0);
+                                //obl.ObliczWschodZachod(obl.data.AddDays(-1), Convert.ToBoolean(0), 1);
+                                //obl.ObliczWschodZachod(obl.data, Convert.ToBoolean(0), 0);
                                 obl.Kontynuuj();
                                 break;
                             }
@@ -72,12 +87,21 @@
                             {
                                 break;
                             }
-                            DateTime dzienPrzed = new DateTime(obl.data.Year, obl.data.Month, i).AddDays(-1);
-                            Console.WriteLine($"Dla {i}.{obl.data.Month}.{obl.data.Year} ({Obliczenia.szerokoscGeo}N {Obliczenia.dlugoscGeo}E):");
-                            obl.ObliczWschodZachod(dzienPrzed.Day, dzienPrzed.Month, dzienPrzed.Year, korekcja, true, 2);
-                            obl.ObliczWschodZachod(i, obl.data.Month, obl.data.Year, korekcja, true, 1);
-                            obl.ObliczWschodZachod(dzienPrzed.Day, dzienPrzed.Month, dzienPrzed.Year, korekcja, false, 2);
-                            obl.ObliczWschodZachod(i, obl.data.Month, obl.data.Year, korekcja, false, 1);
+                            Console.WriteLine($"Dla {i}.{obl.data.Month}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
+
+                            for (int k = 3; k >= 0; k--)
+                            {
+                                string str = Convert.ToString(k, 2).PadLeft(2, '0');
+                                char[] charArr = str.ToCharArray();
+
+                                obl.ObliczWschodZachod(obl.data.AddDays(-(int)char.GetNumericValue(charArr[1]) - obl.data.Day + i),
+                                    Convert.ToBoolean((int)char.GetNumericValue(charArr[0])), (int)char.GetNumericValue(charArr[1]));
+                            }
+
+                            //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + i), Convert.ToBoolean(1), 1);
+                            //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + i), Convert.ToBoolean(1), 0);
+                            //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + i), Convert.ToBoolean(0), 1);
+                            //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + i), Convert.ToBoolean(0), 0);
                         }
                         obl.Kontynuuj();
                         break;
@@ -92,17 +116,27 @@
                                     break;
                                 }
                                 DateTime dzienPrzed = new DateTime(obl.data.Year, i, j).AddDays(-1);
-                                Console.WriteLine($"Dla {j}.{i}.{obl.data.Year} ({Obliczenia.szerokoscGeo}N {Obliczenia.dlugoscGeo}E):");
-                                obl.ObliczWschodZachod(dzienPrzed.Day, dzienPrzed.Month, dzienPrzed.Year, korekcja, true, 2);
-                                obl.ObliczWschodZachod(j, i, obl.data.Year, korekcja, true, 1);
-                                obl.ObliczWschodZachod(dzienPrzed.Day, dzienPrzed.Month, dzienPrzed.Year, korekcja, false, 2);
-                                obl.ObliczWschodZachod(j, i, obl.data.Year, korekcja, false, 1);
+                                Console.WriteLine($"Dla {j}.{i}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
+
+                                for (int k = 3; k >= 0; k--)
+                                {
+                                    string str = Convert.ToString(k, 2).PadLeft(2, '0');
+                                    char[] charArr = str.ToCharArray();
+
+                                    obl.ObliczWschodZachod(obl.data.AddDays(-(int)char.GetNumericValue(charArr[1]) - obl.data.Day + j).AddMonths(-obl.data.Month + i),
+                                        Convert.ToBoolean((int)char.GetNumericValue(charArr[0])), (int)char.GetNumericValue(charArr[1]));
+                                }
+
+                                //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(1), 1);
+                                //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(1), 0);
+                                //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(0), 1);
+                                //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(0), 0);
                             }
                         }
                         obl.Kontynuuj();
                         break;
                     case 7:
-                        korekcja = !korekcja;
+                        Obliczenia.korekcjaBledu = !Obliczenia.korekcjaBledu;
                         break;
                     case 8:
                         Info();
@@ -183,15 +217,6 @@
                 "natomiast z korekcja bledy nie przekraczaja 1,5 minuty w przod i 1 minuty w tyl.\n\n");
 
             Console.WriteLine("Aby kontynuowac nacisnij Enter...");
-            Console.ReadLine();
-        }
-
-        private static void SprawdzDane(Obliczenia obl)
-        {
-            Console.Clear();
-            Console.WriteLine($"Aktualna data to: {obl.data.Year}.{obl.data.Month}.{obl.data.Day}\n" +
-                $"Aktualne wspolrzedne geograficzne to (szerokosc, dlugosc): {Obliczenia.szerokoscGeo}N {Obliczenia.dlugoscGeo}E" +
-                $"\nNacisnij Enter aby kontynuowac...");
             Console.ReadLine();
         }
     }
