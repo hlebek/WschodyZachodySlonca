@@ -58,10 +58,10 @@
                                 Console.WriteLine($"Dla {input}.{obl.data.Month}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
 
                                 // xx = k
-                                // 00 = 0
-                                // 01 = 1
-                                // 10 = 2
                                 // 11 = 3
+                                // 10 = 2
+                                // 01 = 1
+                                // 00 = 0
                                 for (int k = 3; k >= 0; k--)
                                 {
                                     string str = Convert.ToString(k, 2).PadLeft(2, '0');
