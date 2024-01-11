@@ -47,8 +47,8 @@ namespace WschodyZachodySlonca
         public Obliczenia()
         {
             data = DateTime.Now;
-            szerokoscGeo = 54.35;
-            dlugoscGeo = 18.67;
+            szerokoscGeo = 54.72;
+            dlugoscGeo = 18.41;
         }
 
         #endregion

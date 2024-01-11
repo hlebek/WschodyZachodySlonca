@@ -1,4 +1,7 @@
-﻿namespace WschodyZachodySlonca
+﻿using System.Collections.Generic;
+using System.Reflection;
+
+namespace WschodyZachodySlonca
 {
     internal class Program
     {
@@ -17,6 +20,7 @@
 
         static void Main(string[] args)
         {
+            sortowanieTemp();
             Obliczenia obl = new Obliczenia();
 
             while (true)
@@ -217,6 +221,25 @@
                 "natomiast z korekcja bledy nie przekraczaja 1,5 minuty w przod i 1 minuty w tyl.\n\n");
 
             Console.WriteLine("Aby kontynuowac nacisnij Enter...");
+            Console.ReadLine();
+        }
+
+        public static void sortowanieTemp()
+        {
+            SzerokosciGeoMiast szerokosci = new SzerokosciGeoMiast();
+            SortedList<string, double> sortowanie = new SortedList<string, double>();
+            Console.WriteLine($"Wielkosc: {szerokosci.}");
+            foreach (var item in szerokosci.)
+            {
+                sortowanie.Add(item.Name, (double)item.GetValue(szerokosci));
+                Console.WriteLine($"Dodano: {item.Name} {item.GetValue(szerokosci)}");
+            }
+
+            //for (int i = 0; i < typeof(SzerokosciGeoMiast).GetFields().Length; i++)
+            //{
+            //    sortowanie.Add((typeof(SzerokosciGeoMiast).GetField()), i));
+            //    global::System.Console.WriteLine($"{1}:".PadRight(2) + $"{sortowanie[i]}");
+            //}
             Console.ReadLine();
         }
     }
