@@ -1,9 +1,8 @@
-﻿using System.Collections;
-
-namespace WschodyZachodySlonca
+﻿namespace WschodyZachodySlonca
 {
     internal class Obliczenia
     {
+        //TODO pozbyc sie magic numberow
         #region stale
 
         const int maxSzerokoscGeo = 90;
@@ -52,6 +51,8 @@ namespace WschodyZachodySlonca
         }
 
         #endregion
+
+        #region metody
 
         /// <summary>
         /// Ustawia wspolrzedne geograficzne obiektu odczytujac wejscie z klawiatury.
@@ -364,5 +365,7 @@ namespace WschodyZachodySlonca
                 $"Aktualne wspolrzedne geograficzne to (szerokosc, dlugosc): {obl.szerokoscGeo}N {obl.dlugoscGeo}E");
             obl.Kontynuuj();
         }
+
+        #endregion
     }
 }

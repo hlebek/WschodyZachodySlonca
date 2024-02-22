@@ -12,6 +12,7 @@ namespace WschodyZachodySlonca
                     "\n5. Oblicz wschod i zachod slonca dla calego miesiaca" +
                     "\n6. Oblicz wschod i zachod slonca dla calego roku" +
                     "\n7. Zmien ustawienie korekcji bledu zalamania swiatla" +
+                    "\n999. Test" +
                     "\n8. Info o programie\n" +
                     "\n9. Wyjdz z programu.\n";
 
@@ -20,7 +21,7 @@ namespace WschodyZachodySlonca
 
         static void Main(string[] args)
         {
-            sortowanieTemp();
+            Sortowanie.sortowanieTemp();
             Obliczenia obl = new Obliczenia();
 
             while (true)
@@ -29,7 +30,9 @@ namespace WschodyZachodySlonca
                 Console.WriteLine($"Czesc\nCo chcesz zrobic?\n\nKorekcja bledu wlaczona? [{Obliczenia.korekcjaBledu}]\n" + Program.opcjeMenu);
 
                 int wyborMenu;
-                if (!int.TryParse(Console.ReadLine(), out wyborMenu) || wyborMenu < minOpcji || wyborMenu > maxOpcji)
+                // TODO
+                // warunek na 999 tymczasowy
+                if ((!int.TryParse(Console.ReadLine(), out wyborMenu) || wyborMenu < minOpcji || wyborMenu > maxOpcji) && !(wyborMenu == 999 || wyborMenu == 2137))
                 {
                     continue;
                 }
@@ -61,6 +64,10 @@ namespace WschodyZachodySlonca
                                 }
                                 Console.WriteLine($"Dla {input}.{obl.data.Month}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
 
+                                // TODO
+                                // da się to zrobić lepiej i ładniej - wystarczą dwa fory zagniezdzone.
+                                // Oba fory liczą od 1 do 0 i wywołują metodę ponizej.
+                                // Zadne skomplikowane konwersje nie sa potrzebne...
                                 // xx = k
                                 // 11 = 3
                                 // 10 = 2
@@ -147,6 +154,10 @@ namespace WschodyZachodySlonca
                         break;
                     case 9:
                         return;
+                    case 999:
+                        WalidacjaXml.WalidujXml();
+                        Console.ReadLine();
+                        break;
                     case 2137:
                         Papaj();
                         break;
@@ -199,7 +210,7 @@ namespace WschodyZachodySlonca
                 "                        *///////***********,,,,,,,,,*******                     \n" +
                 "                           */**///**********************                        \n" +
                 "                                 *((***////////*///*,                           \n\n" +
-                "Zostales zgwalcony przez papaja zbrodniarza szmate pedofila. Amen.");
+                "Amen.");
             Console.ReadLine();
         }
 
@@ -221,25 +232,6 @@ namespace WschodyZachodySlonca
                 "natomiast z korekcja bledy nie przekraczaja 1,5 minuty w przod i 1 minuty w tyl.\n\n");
 
             Console.WriteLine("Aby kontynuowac nacisnij Enter...");
-            Console.ReadLine();
-        }
-
-        public static void sortowanieTemp()
-        {
-            SzerokosciGeoMiast szerokosci = new SzerokosciGeoMiast();
-            SortedList<string, double> sortowanie = new SortedList<string, double>();
-            Console.WriteLine($"Wielkosc: {szerokosci.}");
-            foreach (var item in szerokosci.)
-            {
-                sortowanie.Add(item.Name, (double)item.GetValue(szerokosci));
-                Console.WriteLine($"Dodano: {item.Name} {item.GetValue(szerokosci)}");
-            }
-
-            //for (int i = 0; i < typeof(SzerokosciGeoMiast).GetFields().Length; i++)
-            //{
-            //    sortowanie.Add((typeof(SzerokosciGeoMiast).GetField()), i));
-            //    global::System.Console.WriteLine($"{1}:".PadRight(2) + $"{sortowanie[i]}");
-            //}
             Console.ReadLine();
         }
     }

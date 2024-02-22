@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="Lokalizacje">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Miejscowosc" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DlugoscGeo">
+                <xs:simpleType>
+                  <xs:restriction base="xs:double">
+                    <xs:minInclusive value="-180" />
+                    <xs:maxInclusive value="180" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="SzerokoscGeo">
+                <xs:simpleType>
+                  <xs:restriction base="xs:double">
+                    <xs:minInclusive value="-90" />
+                    <xs:maxInclusive value="90" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Nazwa" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="UnikatowaNazwa">
+      <xs:selector xpath="Miejscowosc" />
+      <xs:field xpath="@Nazwa" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

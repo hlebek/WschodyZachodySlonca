@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Lokalizacje>
+  <Miejscowosc Nazwa="Puck">
+    <DlugoscGeo>18.41</DlugoscGeo>
+    <SzerokoscGeo>54.72</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Warszawa">
+    <DlugoscGeo>21.07</DlugoscGeo>
+    <SzerokoscGeo>52.22</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Gdansk">
+    <DlugoscGeo>21.07</DlugoscGeo>
+    <SzerokoscGeo>54.35</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Krakow">
+    <DlugoscGeo>19.94</DlugoscGeo>
+    <SzerokoscGeo>50.06</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Rzeszow">
+    <DlugoscGeo>22.00</DlugoscGeo>
+    <SzerokoscGeo>50.04</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Poznan">
+    <DlugoscGeo>16.93</DlugoscGeo>
+    <SzerokoscGeo>52.41</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Bialystok">
+    <DlugoscGeo>23.15</DlugoscGeo>
+    <SzerokoscGeo>53.13</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Szczecin">
+    <DlugoscGeo>14.55</DlugoscGeo>
+    <SzerokoscGeo>53.43</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Wroclaw">
+    <DlugoscGeo>17.03</DlugoscGeo>
+    <SzerokoscGeo>51.11</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Berlin">
+    <DlugoscGeo>13.40</DlugoscGeo>
+    <SzerokoscGeo>52.52</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Paryz">
+    <DlugoscGeo>2.35</DlugoscGeo>
+    <SzerokoscGeo>48.86</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Londyn">
+    <DlugoscGeo>0</DlugoscGeo>
+    <SzerokoscGeo>51.50</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Oslo">
+    <DlugoscGeo>10.75</DlugoscGeo>
+    <SzerokoscGeo>59.91</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Sztokholm">
+    <DlugoscGeo>18.08</DlugoscGeo>
+    <SzerokoscGeo>59.31</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Helsinki">
+    <DlugoscGeo>24.94</DlugoscGeo>
+    <SzerokoscGeo>60.17</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Rejkiawik">
+    <DlugoscGeo>-21.89</DlugoscGeo>
+    <SzerokoscGeo>64.13</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Madryt">
+    <DlugoscGeo>-3.70</DlugoscGeo>
+    <SzerokoscGeo>40.42</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Rzym">
+    <DlugoscGeo>12.50</DlugoscGeo>
+    <SzerokoscGeo>41.90</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Praga">
+    <DlugoscGeo>14.42</DlugoscGeo>
+    <SzerokoscGeo>50.08</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Budapeszt">
+    <DlugoscGeo>19.05</DlugoscGeo>
+    <SzerokoscGeo>47.50</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Ateny">
+    <DlugoscGeo>23.73</DlugoscGeo>
+    <SzerokoscGeo>37.98</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Kijow">
+    <DlugoscGeo>30.52</DlugoscGeo>
+    <SzerokoscGeo>50.45</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Moskwa">
+    <DlugoscGeo>37.62</DlugoscGeo>
+    <SzerokoscGeo>55.75</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Ankara">
+    <DlugoscGeo>32.84</DlugoscGeo>
+    <SzerokoscGeo>39.94</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Jerozolima">
+    <DlugoscGeo>35.21</DlugoscGeo>
+    <SzerokoscGeo>31.77</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Teheran">
+    <DlugoscGeo>51.42</DlugoscGeo>
+    <SzerokoscGeo>35.69</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Nowe Delhi">
+    <DlugoscGeo>77.23</DlugoscGeo>
+    <SzerokoscGeo>28.61</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Bangkok">
+    <DlugoscGeo>100.53</DlugoscGeo>
+    <SzerokoscGeo>13.71</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Hong Kong">
+    <DlugoscGeo>114.17</DlugoscGeo>
+    <SzerokoscGeo>22.31</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Wuhan">
+    <DlugoscGeo>114.29</DlugoscGeo>
+    <SzerokoscGeo>30.57</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Pekin">
+    <DlugoscGeo>116.40</DlugoscGeo>
+    <SzerokoscGeo>39.92</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Tokio">
+    <DlugoscGeo>139.75</DlugoscGeo>
+    <SzerokoscGeo>35.68</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Seoul">
+    <DlugoscGeo>126.99</DlugoscGeo>
+    <SzerokoscGeo>37.54</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Pyongyang">
+    <DlugoscGeo>125.72</DlugoscGeo>
+    <SzerokoscGeo>39.00</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Wladywostok">
+    <DlugoscGeo>131.88</DlugoscGeo>
+    <SzerokoscGeo>43.12</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Sydney">
+    <DlugoscGeo>151.21</DlugoscGeo>
+    <SzerokoscGeo>-33.87</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Perth">
+    <DlugoscGeo>115.88</DlugoscGeo>
+    <SzerokoscGeo>-31.99</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Brazylia">
+    <DlugoscGeo>-47.89</DlugoscGeo>
+    <SzerokoscGeo>-15.79</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Santiago">
+    <DlugoscGeo>-70.66</DlugoscGeo>
+    <SzerokoscGeo>-33.46</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Bogota">
+    <DlugoscGeo>-74.09</DlugoscGeo>
+    <SzerokoscGeo>4.63</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Quito">
+    <DlugoscGeo>-78.46</DlugoscGeo>
+    <SzerokoscGeo>0</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Hawana">
+    <DlugoscGeo>-82.36</DlugoscGeo>
+    <SzerokoscGeo>23.11</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Meksyk">
+    <DlugoscGeo>-99.13</DlugoscGeo>
+    <SzerokoscGeo>19.43</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Nowy Jork">
+    <DlugoscGeo>-73.96</DlugoscGeo>
+    <SzerokoscGeo>40.62</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Waszyngton">
+    <DlugoscGeo>-77.04</DlugoscGeo>
+    <SzerokoscGeo>38.90</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Miami">
+    <DlugoscGeo>-80.20</DlugoscGeo>
+    <SzerokoscGeo>25.76</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Dallas">
+    <DlugoscGeo>-96.80</DlugoscGeo>
+    <SzerokoscGeo>32.77</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Chicago">
+    <DlugoscGeo>-87.63</DlugoscGeo>
+    <SzerokoscGeo>41.87</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Seatle">
+    <DlugoscGeo>-122.34</DlugoscGeo>
+    <SzerokoscGeo>47.60</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="San Francisco">
+    <DlugoscGeo>-122.44</DlugoscGeo>
+    <SzerokoscGeo>37.76</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Los Angeles">
+    <DlugoscGeo>-118.24</DlugoscGeo>
+    <SzerokoscGeo>34.05</SzerokoscGeo>
+  </Miejscowosc>
+
+  <Miejscowosc Nazwa="Ottawa">
+    <DlugoscGeo>-75.69</DlugoscGeo>
+    <SzerokoscGeo>45.41</SzerokoscGeo>
+  </Miejscowosc>
+</Lokalizacje>
