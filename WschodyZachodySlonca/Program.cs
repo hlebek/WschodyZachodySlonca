@@ -21,7 +21,19 @@ namespace WschodyZachodySlonca
 
         static void Main(string[] args)
         {
-            Sortowanie.sortowanieTemp();
+            List<string> xmlki = new List<string>();
+
+            foreach (string arg in args)
+            {
+                if(arg.Contains("-x "))
+                {
+                    if(!arg.Remove(0,3).Contains(" ") && arg.Remove(0, arg.Length - 4).Contains(".xml"))
+                        xmlki.Add(arg.Remove(0,3));
+                }
+            }
+
+            Sortowanie.SortowanieListyMiast(xmlki);
+
             Obliczenia obl = new Obliczenia();
 
             while (true)
@@ -62,29 +74,19 @@ namespace WschodyZachodySlonca
                                     Console.ReadLine();
                                     break;
                                 }
+
+                                Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine($"Dla {input}.{obl.data.Month}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
+                                Console.ResetColor();
 
-                                // TODO
-                                // da się to zrobić lepiej i ładniej - wystarczą dwa fory zagniezdzone.
-                                // Oba fory liczą od 1 do 0 i wywołują metodę ponizej.
-                                // Zadne skomplikowane konwersje nie sa potrzebne...
-                                // xx = k
-                                // 11 = 3
-                                // 10 = 2
-                                // 01 = 1
-                                // 00 = 0
-                                for (int k = 3; k >= 0; k--)
+                                for (int i = 1; i >= 0; i--)
                                 {
-                                    string str = Convert.ToString(k, 2).PadLeft(2, '0');
-                                    char[] charArr = str.ToCharArray();
-
-                                    obl.ObliczWschodZachod(obl.data.AddDays(-(int)char.GetNumericValue(charArr[1])),
-                                        Convert.ToBoolean((int)char.GetNumericValue(charArr[0])), (int)char.GetNumericValue(charArr[1]));
+                                    for (int j = 1; j >= 0; j--)
+                                    {
+                                        obl.ObliczWschodZachod(obl.data.AddDays(-j), Convert.ToBoolean(i), j);
+                                    }
                                 }
-                                //obl.ObliczWschodZachod(obl.data.AddDays(-1), Convert.ToBoolean(1), 1);
-                                //obl.ObliczWschodZachod(obl.data, Convert.ToBoolean(1), 0);
-                                //obl.ObliczWschodZachod(obl.data.AddDays(-1), Convert.ToBoolean(0), 1);
-                                //obl.ObliczWschodZachod(obl.data, Convert.ToBoolean(0), 0);
+
                                 obl.Kontynuuj();
                                 break;
                             }
@@ -98,21 +100,18 @@ namespace WschodyZachodySlonca
                             {
                                 break;
                             }
+
+                            Console.ForegroundColor = ConsoleColor.Cyan;
                             Console.WriteLine($"Dla {i}.{obl.data.Month}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
+                            Console.ResetColor();
 
-                            for (int k = 3; k >= 0; k--)
+                            for (int x = 1; x >= 0; x--)
                             {
-                                string str = Convert.ToString(k, 2).PadLeft(2, '0');
-                                char[] charArr = str.ToCharArray();
-
-                                obl.ObliczWschodZachod(obl.data.AddDays(-(int)char.GetNumericValue(charArr[1]) - obl.data.Day + i),
-                                    Convert.ToBoolean((int)char.GetNumericValue(charArr[0])), (int)char.GetNumericValue(charArr[1]));
+                                for (int y = 1; y >= 0; y--)
+                                {
+                                    obl.ObliczWschodZachod(obl.data.AddDays(- y - obl.data.Day + i), Convert.ToBoolean(x), y);
+                                }
                             }
-
-                            //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + i), Convert.ToBoolean(1), 1);
-                            //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + i), Convert.ToBoolean(1), 0);
-                            //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + i), Convert.ToBoolean(0), 1);
-                            //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + i), Convert.ToBoolean(0), 0);
                         }
                         obl.Kontynuuj();
                         break;
@@ -126,22 +125,19 @@ namespace WschodyZachodySlonca
                                 {
                                     break;
                                 }
+
                                 DateTime dzienPrzed = new DateTime(obl.data.Year, i, j).AddDays(-1);
+                                Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine($"Dla {j}.{i}.{obl.data.Year} ({obl.szerokoscGeo}N {obl.dlugoscGeo}E):");
+                                Console.ResetColor();
 
-                                for (int k = 3; k >= 0; k--)
+                                for (int x = 1; x >= 0; x--)
                                 {
-                                    string str = Convert.ToString(k, 2).PadLeft(2, '0');
-                                    char[] charArr = str.ToCharArray();
-
-                                    obl.ObliczWschodZachod(obl.data.AddDays(-(int)char.GetNumericValue(charArr[1]) - obl.data.Day + j).AddMonths(-obl.data.Month + i),
-                                        Convert.ToBoolean((int)char.GetNumericValue(charArr[0])), (int)char.GetNumericValue(charArr[1]));
+                                    for (int y = 1; y >= 0; y--)
+                                    {
+                                        obl.ObliczWschodZachod(obl.data.AddDays(- y - obl.data.Day + j).AddMonths(- obl.data.Month + i), Convert.ToBoolean(x), y);
+                                    }
                                 }
-
-                                //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(1), 1);
-                                //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(1), 0);
-                                //obl.ObliczWschodZachod(obl.data.AddDays(-1 - obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(0), 1);
-                                //obl.ObliczWschodZachod(obl.data.AddDays(-obl.data.Day + j).AddMonths(-obl.data.Month + i), Convert.ToBoolean(0), 0);
                             }
                         }
                         obl.Kontynuuj();
@@ -155,7 +151,7 @@ namespace WschodyZachodySlonca
                     case 9:
                         return;
                     case 999:
-                        WalidacjaXml.WalidujXml();
+                        WalidacjaXml.WalidujXml(xmlki);
                         Console.ReadLine();
                         break;
                     case 2137:

@@ -4,42 +4,35 @@ namespace WschodyZachodySlonca
 {
     public static class Sortowanie
     {
-        public static void sortowanieTemp()
+        public static SortedList<string, Dictionary<double, double>> listaMiast = new SortedList<string, Dictionary<double, double>>();
+        public static void SortowanieListyMiast(List<string> xmlsPaths)
         {
             Dictionary<double, double> wspolrzedne = new Dictionary<double, double>();
-            SortedList<string, Dictionary<double, double>> lista = new SortedList<string, Dictionary<double, double>>();
 
             XmlDocument xml = new XmlDocument();
 
-            // TODO
-            // Tutaj zmienić "\\Lokalizacje.xml" na zmienna, zeby uzytkownik mogl pobierac swoje xmlki
-            string xmlPath = string.Concat(Directory.GetCurrentDirectory(), "\\Lokalizacje.xml");
-            xml.Load("Lokalizacje.xml");
-            XmlNodeList nodey = xml.SelectNodes("/Lokalizacje/Miejscowosc");
-
-            foreach (XmlNode node in nodey)
+            foreach (string item in xmlsPaths)
             {
-                XmlNodeList childNodey = node.ChildNodes;
-                XmlAttributeCollection atrybut = node.Attributes;
+                xml.Load(item);
+                XmlNodeList nodey = xml.SelectNodes("/Lokalizacje/Miejscowosc");
 
-                double x, y;
-                double.TryParse(childNodey.Item(0).InnerText, out x);
-                double.TryParse(childNodey.Item(1).InnerText, out y);
+                foreach (XmlNode node in nodey)
+                {
+                    XmlNodeList childNodey = node.ChildNodes;
+                    XmlAttributeCollection atrybut = node.Attributes;
 
-                wspolrzedne.Add(x, y);
+                    double x, y;
+                    double.TryParse(childNodey.Item(0).InnerText, out x);
+                    double.TryParse(childNodey.Item(1).InnerText, out y);
 
-                lista.Add(atrybut.Item(0).InnerText, wspolrzedne);
+                    wspolrzedne.Add(x, y);
 
-                wspolrzedne.Clear();
+                    if(!listaMiast.ContainsKey(atrybut.Item(0).InnerText))
+                        listaMiast.Add(atrybut.Item(0).InnerText, wspolrzedne);
+
+                    wspolrzedne.Clear();
+                }
             }
-
-            foreach (var item in lista)
-            {
-                Console.WriteLine(item.Key);
-            }
-
-
-            Console.ReadLine();
         }
     }
 }
