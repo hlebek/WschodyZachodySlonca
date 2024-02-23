@@ -57,28 +57,37 @@
         /// <summary>
         /// Ustawia wspolrzedne geograficzne obiektu odczytujac wejscie z klawiatury.
         /// </summary>
-        public void UstawWspolrzedneGeo()
+        public void UstawWspolrzedneGeo(double? dlGeo = null, double? szGeo = null)
         {
             Console.Clear();
 
-            double input;
+            if (dlGeo != null && szGeo != null)
+            {
+                dlugoscGeo = (double)dlGeo;
+                szerokoscGeo = (double)szGeo;
+            }
+            else
+            {
+                double input;
 
-            Console.WriteLine("Uwaga! Liczby niecałkowite podajemy z przecinkiem, a nie kropką!" +
-                "\nWprowadz szerokosc geograficzna w stopniach z minutami po przecinku." +
-                $"\nDla N wartosci dodatnie, dla S wartosci ujemne (-{maxSzerokoscGeo};{maxSzerokoscGeo}):");
+                Console.WriteLine("Uwaga! Liczby niecałkowite podajemy z przecinkiem, a nie kropką!" +
+                    "\nWprowadz szerokosc geograficzna w stopniach z minutami po przecinku." +
+                    $"\nDla N wartosci dodatnie, dla S wartosci ujemne (-{maxSzerokoscGeo};{maxSzerokoscGeo}):");
 
-            while (!double.TryParse(Console.ReadLine(), out input) || input < -maxSzerokoscGeo || input > maxSzerokoscGeo)
-                continue;
-            szerokoscGeo = input;
+                while (!double.TryParse(Console.ReadLine(), out input) || input < -maxSzerokoscGeo || input > maxSzerokoscGeo)
+                    continue;
+                szerokoscGeo = input;
 
-            Console.WriteLine("\nWprowadz dlugosc geograficzna w stopniach z minutami po przecinku." +
-                $"\nDla E wartosci dodatnie, dla W wartosci ujemne (-{maxDlugoscGeo};{maxDlugoscGeo}):");
+                Console.WriteLine("\nWprowadz dlugosc geograficzna w stopniach z minutami po przecinku." +
+                    $"\nDla E wartosci dodatnie, dla W wartosci ujemne (-{maxDlugoscGeo};{maxDlugoscGeo}):");
 
-            while (!double.TryParse(Console.ReadLine(), out input) || input < -maxDlugoscGeo || input > maxDlugoscGeo)
-                continue;
-            dlugoscGeo = input;
+                while (!double.TryParse(Console.ReadLine(), out input) || input < -maxDlugoscGeo || input > maxDlugoscGeo)
+                    continue;
+                dlugoscGeo = input;
+                Console.WriteLine("");
+            }
 
-            Console.WriteLine($"\nSzerokość geograficzna to: {szerokoscGeo}.\nDługość geograficzna to: {dlugoscGeo}.");
+            Console.WriteLine($"Szerokość geograficzna to: {szerokoscGeo}°N.\nDługość geograficzna to: {dlugoscGeo}°E.");
             Kontynuuj();
         }
 
@@ -362,7 +371,7 @@
         {
             Console.Clear();
             Console.WriteLine($"Aktualna data to: {obl.data.Year}Y {obl.data.Month}M\n" +
-                $"Aktualne wspolrzedne geograficzne to (szerokosc, dlugosc): {obl.szerokoscGeo}N {obl.dlugoscGeo}E");
+                $"Aktualne wspolrzedne geograficzne to (szerokosc, dlugosc): {obl.szerokoscGeo}°N, {obl.dlugoscGeo}°E");
             obl.Kontynuuj();
         }
 

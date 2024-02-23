@@ -6,7 +6,7 @@ public class WalidacjaXml
     private static readonly string schemaFileName = "LokalizacjeSchema.xsd";
     private static string? lokalizacjaXmlki = null;
     private static int fail = 0;
-    public static void WalidujXml(List<string> xmlsPaths)
+    public static bool WalidujXml(List<string> xmlsPaths)
     {
         XmlReaderSettings schema = new XmlReaderSettings();
         schema.Schemas.Add(null, schemaFileName);
@@ -19,25 +19,24 @@ public class WalidacjaXml
             lokalizacjaXmlki = Path.GetFullPath(plik.Name);
             plik.Close();
 
-            XmlReader lokalizacje = XmlReader.Create(item, schema);
-            while (lokalizacje.Read()) { }
+            XmlReader daneXml = XmlReader.Create(item, schema);
+            while (daneXml.Read()) { }
             lokalizacjaXmlki = null;
-            lokalizacje.Close();
+
+            daneXml.Close();
         }
 
         if (fail > 0)
         {
-            fail = 0;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("\nWalidacja plikow xml nie powiodla sie.");
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\nWalidacja plikow xml powiodla sie.");
+            Console.WriteLine($"\nLiczba wykrytych bledow: {fail}");
+            Console.WriteLine("\nWalidacja plikow xml nie powiodla sie!");
+            Console.ResetColor();
+            return false;
         }
 
-        Console.ResetColor();
+        fail = 0;
+        return true;
     }
 
     static void EventHandler(object sender, ValidationEventArgs e)
@@ -46,15 +45,14 @@ public class WalidacjaXml
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nWARNING: " + e.Message + "\nFile location: " + $"{lokalizacjaXmlki}\n");
-
             Console.ResetColor();
         }
         else if (e.Severity == XmlSeverityType.Error)
         {
+            fail++;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("\nERROR: " + e.Message + "\nFile location: " + $"{lokalizacjaXmlki}");
             Console.ResetColor();
-            fail++;
         }
     }
 }

@@ -2,7 +2,7 @@
   "profiles": {
     "WschodyZachodySlonca": {
       "commandName": "Project",
-      "commandLineArgs": "\"-x Lokalizacje.xml\" \"-x Lokalizacje4.xml\""
+      "commandLineArgs": "\"-x Lokalizacje.xml\" \"-x 1234.xml\""
     }
   }
 }
