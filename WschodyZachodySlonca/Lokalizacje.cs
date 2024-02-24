@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 
 namespace WschodyZachodySlonca
 {
@@ -21,11 +22,12 @@ namespace WschodyZachodySlonca
 
                 foreach (XmlNode node in nodey)
                 {
+                    double x = double.MaxValue, y = double.MaxValue;
                     Dictionary<double, double> wspolrzedne = new Dictionary<double, double>();
                     XmlNodeList childNodey = node.ChildNodes;
                     XmlAttributeCollection atrybut;
 
-                    if (node.Attributes.Count != 0)
+                    if (node.Attributes.Count != 0 && childNodey.Count != 0)
                     {
                         atrybut = node.Attributes;
                     }
@@ -34,19 +36,48 @@ namespace WschodyZachodySlonca
                         continue;
                     }
 
+                    foreach (XmlNode childNode in childNodey)
+                    {
+                        if (!string.IsNullOrEmpty(childNode.LocalName) && !string.IsNullOrWhiteSpace(childNode.LocalName) && !string.IsNullOrEmpty(childNode.InnerText) && !string.IsNullOrWhiteSpace(childNode.InnerText))
+                        {
+                            if (childNode.LocalName.ToLower() == "dlugoscgeo")
+                            {
+                                if (!double.TryParse(childNode.InnerText.Replace('.', ','), out x))
+                                {
+                                    // Dzieki ustawieniu na max value dalsze warunki nie beda sprawdzane, poniewaz nizej jest
+                                    // warunek if, ktory pomija dalsze wykonywanie iteracji petli
+                                    x = double.MaxValue;
+                                }
+                            }
+                            else if (childNode.LocalName.ToLower() == "szerokoscgeo")
+                            {
+                                if (!double.TryParse(childNode.InnerText.Replace('.', ','), out y))
+                                {
+                                    y = double.MaxValue;
+                                }
+                            }
+                        }
+                    }
 
-                    double x, y;
-                    x = double.Parse(childNodey.Item(0).InnerText.Replace('.', ','));
-                    y = double.Parse(childNodey.Item(1).InnerText.Replace('.', ','));
+                    if (x == double.MaxValue || y == double.MaxValue)
+                        continue;
 
-                    wspolrzedne.Add(x, y);
+                    wspolrzedne.Add((double)x, (double)y);
 
-                    Console.WriteLine($"Atrybut: " + atrybut.Item(0).InnerText);
-
-                    // TODO
-                    // Bierze tutaj zerowy atrybut, a u gory zerowa i pierwszy node przez co jak ktos powiesza w xmlce to pomimo, ze nazwy nodeow i atrybutow beda niepoprawne to i tak wezmie z nich wartosci - do poprawy
-                    if (!listaMiast.ContainsKey(atrybut.Item(0).InnerText) && x <= maxDluGeo && x >= minDluGeo && y <= maxSzGeo && y >= minSzGeo)
-                        listaMiast.Add(atrybut.Item(0).InnerText, wspolrzedne);
+                    foreach (XmlAttribute attr in atrybut)
+                    {
+                        if (!string.IsNullOrEmpty(attr.InnerText) && !string.IsNullOrWhiteSpace(attr.InnerText))
+                        {
+                            if (attr.LocalName.ToLower() == "nazwa")
+                            {
+                                if (!listaMiast.ContainsKey(attr.InnerText) && x <= maxDluGeo && x >= minDluGeo && y <= maxSzGeo && y >= minSzGeo)
+                                {
+                                    listaMiast.Add(attr.InnerText, wspolrzedne);
+                                }
+                            } 
+                                
+                        }
+                    }
                 }
             }
             Console.Clear();
@@ -54,6 +85,7 @@ namespace WschodyZachodySlonca
 
         public static bool WyswietlListeMiast()
         {
+            Console.Clear();
             if (listaMiast.Count > 0)
             {
                 foreach (var item in listaMiast)
@@ -68,13 +100,11 @@ namespace WschodyZachodySlonca
             else
             {
                 Console.WriteLine("Brak predefiniowanych lokalizacji.");
-                Console.WriteLine("Nacisnij Enter, aby kontynuowac...");
-                Console.ReadLine();
                 return false;
             }
         }
 
-        public static double[] WybierzMiasto(string miasto)
+        public static double[] WspolrzedneMiasta(string miasto)
         {
             KeyValuePair<double, double> placeHolder = listaMiast.Values[listaMiast.IndexOfKey(miasto)].FirstOrDefault();
             double[] wspolrzedne = { placeHolder.Key, placeHolder.Value };
@@ -84,7 +114,8 @@ namespace WschodyZachodySlonca
 
         public static void ZapiszDoXml(SortedList<string, Dictionary<double, double>> lista, string nazwaPliku)
         {
-            XmlWriter writer = XmlWriter.Create(nazwaPliku + ".xml");
+            nazwaPliku = nazwaPliku + ".xml";
+            XmlWriter writer = XmlWriter.Create(nazwaPliku);
             writer.WriteStartElement("Lokalizacje");
 
             for (int i = 0; i < lista.Count; i++)
@@ -100,6 +131,8 @@ namespace WschodyZachodySlonca
             writer.WriteEndDocument();
             writer.Flush();
             writer.Close();
+            XDocument plik = XDocument.Load(nazwaPliku);
+            plik.Save(nazwaPliku);
         }
     }
 }

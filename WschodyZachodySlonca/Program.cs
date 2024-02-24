@@ -11,17 +11,17 @@ namespace WschodyZachodySlonca
                     "\n4. Wybierz lokalizacje" +
                     "\n5. Dodaj lokalizacje" +
                     "\n6. Zapisz lokalizacje" +
-                    "\n-. Wczytaj lokalizacje" +
-                    "\n-. Edytuj lokalizacje" +
-                    "\n-. Wyswietl lokalizacje" +
-                    "\n-. Wyczysc lokalizacje" +
-                    "\n11. Oblicz wschod i zachod slonca dla danego dnia" +
-                    "\n12. Oblicz wschod i zachod slonca dla calego miesiaca" +
-                    "\n13. Oblicz wschod i zachod slonca dla calego roku" +
-                    "\n14. Zmien ustawienie korekcji bledu zalamania swiatla" +
-                    "\n999. Test" +
-                    "\n15. Info o programie\n" +
-                    "\n16. Wyjdz z programu.\n";
+                    "\n7. Wczytaj lokalizacje" +
+                    "\n8. Edytuj lokalizacje" +
+                    "\n9. Wyswietl lokalizacje" +
+                    "\n10. Usun lokalizacje" +
+                    "\n11. Wyczysc wszytkie lokalizacje" +
+                    "\n12. Oblicz wschod i zachod slonca dla danego dnia" +
+                    "\n13. Oblicz wschod i zachod slonca dla calego miesiaca" +
+                    "\n14. Oblicz wschod i zachod slonca dla calego roku" +
+                    "\n15. Zmien ustawienie korekcji bledu zalamania swiatla" +
+                    "\n16. Info o programie\n" +
+                    "\n17. Wyjdz z programu.\n";
 
         const int minOpcji = 1;
         static int maxOpcji = opcjeMenu.Count(c => c.Equals('\n')) - 2;
@@ -42,7 +42,7 @@ namespace WschodyZachodySlonca
             if(!WalidacjaXml.WalidujXml(xmlkiSciezki))
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine("\nNiepoprawne lokalizacje nie zostana uwzglednione!\n");
+                Console.WriteLine("\nNiepoprawne lokalizacje nie zostana uwzglednione!");
                 Console.ResetColor();
                 obl.Kontynuuj();
                 Console.Clear();
@@ -56,43 +56,50 @@ namespace WschodyZachodySlonca
                 Console.WriteLine($"Czesc\nCo chcesz zrobic?\n\nKorekcja bledu wlaczona? [{Obliczenia.korekcjaBledu}]\n" + Program.opcjeMenu);
 
                 int wyborMenu;
-                // TODO
-                // warunek na 999 tymczasowy
-                if ((!int.TryParse(Console.ReadLine(), out wyborMenu) || wyborMenu < minOpcji || wyborMenu > maxOpcji) && !(wyborMenu == 999 || wyborMenu == 2137))
+
+                if ((!int.TryParse(Console.ReadLine(), out wyborMenu) || wyborMenu < minOpcji || wyborMenu > maxOpcji) && wyborMenu != 2137)
                 {
                     continue;
                 }
 
+                // TODO
+                // Potworzyc osobne metody dla kazdego case'a i do tego zeliminowac duplikujacy sie kod (np. edycja, usuwanie lokalizacji albo liczenie wschodow i zachodow)
                 switch (wyborMenu)
                 {
-                    case 1:
+                    case 1: // Sprawdz aktualnie ustawiona date i wspolrzedne geograficzne
+                        // TODO
+                        // Mozna zrobic, zeby defaultowo bylo stale wyswietlane w menu
                         Obliczenia.SprawdzDane(obl);
                         break;
-                    case 2:
+                    case 2: // Zmien date
                         obl.UstawDate();
                         break;
-                    case 3:
+                    case 3: // Zmien wspolrzedne geograficzne
                         obl.UstawWspolrzedneGeo();
                         break;
-                    case 4:
+                    case 4: // Wybierz lokalizacje
                         if (!Lokalizacje.WyswietlListeMiast())
                             continue;
+                        obl.Kontynuuj();
+
                         Console.WriteLine("\nPodaj nazwe lokalizacji:");
                         string miasto = Console.ReadLine();
                         double[] wspolrzedne;
 
-                        if (!string.IsNullOrEmpty(miasto))
+                        if (!string.IsNullOrEmpty(miasto) && !string.IsNullOrWhiteSpace(miasto))
                         {
                             miasto = miasto.ToLower().Insert(1, miasto[0].ToString().ToUpper()).Remove(0, 1);
                         }
                         else
                         {
+                            Console.WriteLine("Niepoprawna nazwa lokalizacji.");
+                            obl.Kontynuuj();
                             continue;
                         }
 
-                        if(Lokalizacje.listaMiast.ContainsKey(miasto))
+                        if (Lokalizacje.listaMiast.ContainsKey(miasto))
                         {
-                            wspolrzedne = Lokalizacje.WybierzMiasto(miasto);
+                            wspolrzedne = Lokalizacje.WspolrzedneMiasta(miasto);
                         }
                         else
                         {
@@ -103,7 +110,7 @@ namespace WschodyZachodySlonca
 
                         obl.UstawWspolrzedneGeo(wspolrzedne[0], wspolrzedne[1]);
                         break;
-                    case 5:
+                    case 5: // Dodaj lokalizacje
                         Console.Clear();
                         Console.WriteLine("Podaj nazwe nowej lokalizacji:");
                         string nazwaLok;
@@ -113,7 +120,7 @@ namespace WschodyZachodySlonca
                         while (!nazwaLok.All(char.IsLetter) || string.IsNullOrEmpty(nazwaLok) || string.IsNullOrWhiteSpace(nazwaLok))
                         {
                             Console.Clear();
-                            Console.WriteLine("Podaj poprawna nazwe, skladajaca sie z samych liter:");
+                            Console.WriteLine("Podaj poprawna nazwe, skladajaca sie z samych liter i cyfr:");
                             nazwaLok = Console.ReadLine();
                         }
 
@@ -123,7 +130,7 @@ namespace WschodyZachodySlonca
 
                         // TODO
                         // magic numbery
-                        while (!double.TryParse(Console.ReadLine(), out szGeo) || szGeo > 90 || szGeo <-90)
+                        while (!double.TryParse(Console.ReadLine(), out szGeo) || szGeo > 90 || szGeo < -90)
                         {
                             Console.Clear();
                             Console.WriteLine("Podaj poprawna wartosc z przedzialu <-90;90>°N:");
@@ -147,38 +154,204 @@ namespace WschodyZachodySlonca
                             Lokalizacje.listaMiast.Add(nazwaLok, new Dictionary<double, double>() { { szGeo, dluGeo } });
                         }
                         break;
-                    case 6:
+                    case 6: // Zapisz lokalizacje
                         Console.Clear();
-                        Console.WriteLine("Podaj nazwe nowego pliku:");
+                        Console.WriteLine("Podaj nazwe nowego pliku bez rozszerzenia:");
                         string nazwaPliku = Console.ReadLine();
 
-                        while (string.IsNullOrEmpty(nazwaPliku) || string.IsNullOrWhiteSpace(nazwaPliku) || File.Exists(nazwaPliku + ".xml"))
+                        while (string.IsNullOrEmpty(nazwaPliku) || string.IsNullOrWhiteSpace(nazwaPliku) || File.Exists(nazwaPliku + ".xml") || nazwaPliku.Contains(" "))
                         {
                             Console.Clear();
-                            Console.WriteLine("Nazwa pliku jest niepoprawna lub plik juz istnieje. Podaj inna nazwe:");
+                            Console.WriteLine("Nazwa pliku jest niepoprawna lub plik juz istnieje (nazwa pliku nie moze zawierac spacji). Podaj inna nazwe:");
                             nazwaPliku = Console.ReadLine();
                         }
 
                         Lokalizacje.ZapiszDoXml(Lokalizacje.listaMiast, nazwaPliku);
-                        Console.WriteLine("Zapisano plik: " + Path.GetFullPath(nazwaPliku));
+                        Console.WriteLine("Zapisano plik: " + Path.GetFullPath(nazwaPliku) + ".xml");
+                        obl.Kontynuuj();
                         break;
-                    case 7:
+                    case 7: // Wczytaj lokalizacje
                         Console.Clear();
+                        Console.WriteLine("Podaj nazwe pliku xml bez rozszerzenia do wczytania:");
+                        nazwaPliku = Console.ReadLine();
+                        nazwaPliku = nazwaPliku + ".xml";
 
+                        if (string.IsNullOrEmpty(nazwaPliku) || string.IsNullOrWhiteSpace(nazwaPliku) || !File.Exists(nazwaPliku) || nazwaPliku.Contains(" "))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Nazwa pliku jest niepoprawna lub plik nie istnieje. (nazwa pliku nie moze zawierac spacji)");
+                            obl.Kontynuuj();
+                            continue;
+                        }
+
+
+                        List<string> xml = new List<string>();
+                        xml.Add(nazwaPliku);
+
+                        if (!WalidacjaXml.WalidujXml(xml))
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("\nNiepoprawne lokalizacje nie zostana uwzglednione!");
+                            Console.ResetColor();
+                            obl.Kontynuuj();
+                            Console.Clear();
+                        }
+
+                        Lokalizacje.SortowanieListyMiast(xml);
                         break;
-                    case 8:
+                    case 8: // Edytuj lokalizacje
+                        if (!Lokalizacje.WyswietlListeMiast())
+                            continue;
+
+                        Console.WriteLine("\nPodaj nazwe lokalizacji, ktora chcesz edytowac:");
+                        miasto = Console.ReadLine();
+
+                        if (!string.IsNullOrEmpty(miasto) && !string.IsNullOrWhiteSpace(miasto))
+                        {
+                            miasto = miasto.ToLower().Insert(1, miasto[0].ToString().ToUpper()).Remove(0, 1);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Niepoprawna nazwa lokalizacji.");
+                            obl.Kontynuuj();
+                            continue;
+                        }
+
+                        if (Lokalizacje.listaMiast.ContainsKey(miasto))
+                        {
+                            wspolrzedne = Lokalizacje.WspolrzedneMiasta(miasto);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nPodanego miasta nie ma na liscie.");
+                            obl.Kontynuuj();
+                            continue;
+                        }
+
                         Console.Clear();
+                        Console.WriteLine($"Wybrana lokalizacja: {miasto}\nSzerokosc geograficzna: {wspolrzedne[0]}°N\nDlugosc geograficzna: {wspolrzedne[1]}°E\n");
+                        Console.WriteLine("Podaj nowa nazwe lokalizacji (wcisnij Enter, jesli nie chcesz jej zmieniac): ");
+                        string nowaNazwa = Console.ReadLine();
 
+                        if (!string.IsNullOrEmpty(nowaNazwa) && !string.IsNullOrWhiteSpace(nowaNazwa) && nowaNazwa.ToLower() != miasto.ToLower())
+                        {
+                            nowaNazwa = nowaNazwa.ToLower().Insert(1, nowaNazwa[0].ToString().ToUpper()).Remove(0, 1);
+                            while (Lokalizacje.listaMiast.ContainsKey(nowaNazwa) || nowaNazwa.Contains(" "))
+                            {
+                                Console.WriteLine("\nPodana lokalizacja juz istnieje lub jest niepoprawna (nie moze zawierac spacji). Podaj inna nazwe:");
+                                nowaNazwa = Console.ReadLine();
+                            }
+                        }
+                        else
+                        {
+                            nowaNazwa = miasto;
+                        }
+
+                        Console.WriteLine("\nPodaj nowa wartosc szerokosci geograficznej [°N] (wcisnij Enter, jesli nie chcesz jej zmieniac): ");
+                        double nowaWartoscGeo;
+                        string nowaWartosc;
+                        nowaWartosc = Console.ReadLine();
+
+                        if (string.IsNullOrEmpty(nowaWartosc) || string.IsNullOrWhiteSpace(nowaWartosc))
+                        {
+                            nowaWartoscGeo = wspolrzedne[0];
+                        }
+                        else
+                        {
+                            // TODO
+                            // Magic numbery
+                            while (!double.TryParse(nowaWartosc, out nowaWartoscGeo) || nowaWartoscGeo < -90 || nowaWartoscGeo > 90)
+                            {
+                                Console.WriteLine("\nPodana wartosc szerokosci geograficznej jest niepoprawna. Poprawny wartosci mieszcza sie w przedziale <-90;90>." +
+                                    "\nPodaj poprawna wartosc:");
+                                nowaWartosc = Console.ReadLine();
+                            }
+                        }
+
+                        wspolrzedne[0] = nowaWartoscGeo;
+
+                        Console.WriteLine("\nPodaj nowa wartosc dlugosci geograficznej [°E] (wcisnij Enter, jesli nie chcesz jej zmieniac): ");
+                        nowaWartosc = Console.ReadLine();
+
+                        if (string.IsNullOrEmpty(nowaWartosc) || string.IsNullOrWhiteSpace(nowaWartosc))
+                        {
+                            nowaWartoscGeo = wspolrzedne[1];
+                        }
+                        else
+                        {
+                            // TODO
+                            // Magic numbery
+                            while (!double.TryParse(nowaWartosc, out nowaWartoscGeo) || nowaWartoscGeo < -180 || nowaWartoscGeo > 180)
+                            {
+                                Console.WriteLine("Podana wartosc dlugosci geograficznej jest niepoprawna. Poprawny wartosci mieszcza sie w przedziale <-180;180>." +
+                                    "\nPodaj poprawna wartosc:");
+                                nowaWartosc = Console.ReadLine();
+                            }
+                        }
+
+                        wspolrzedne[1] = nowaWartoscGeo;
+
+                        Lokalizacje.listaMiast.Remove(miasto);
+                        Lokalizacje.listaMiast.Add(nowaNazwa, new Dictionary<double, double>() { { wspolrzedne[0], wspolrzedne[1] } });
+
+                        Console.WriteLine($"\nZedytowana lokalizacje {miasto} pomyslnie.");
+                        Console.WriteLine($"\nAktualne dane o lokalizacji - Nazwa: {nowaNazwa}, Wspolrzedne: {wspolrzedne[0]}°N {wspolrzedne[1]}°E");
+
+                        // TODO
+                        // Wyswietlanie lokalizacji po edycji.
+                        obl.Kontynuuj();
                         break;
-                    case 9:
+                    case 9: // Wyswietl lokalizacje
+                        if (!Lokalizacje.WyswietlListeMiast())
+                        {
+                            obl.Kontynuuj();
+                            break;
+                        }
+                        obl.Kontynuuj();
+                        break;
+                    case 10: // Usun lokalizacje
                         Console.Clear();
+                        if (!Lokalizacje.WyswietlListeMiast())
+                            continue;
 
+                        Console.WriteLine("\nPodaj nazwe lokalizacji, ktora chcesz usunac:");
+                        miasto = Console.ReadLine();
+
+                        if (!string.IsNullOrEmpty(miasto) && !string.IsNullOrWhiteSpace(miasto))
+                        {
+                            miasto = miasto.ToLower().Insert(1, miasto[0].ToString().ToUpper()).Remove(0, 1);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Niepoprawna nazwa lokalizacji.");
+                            obl.Kontynuuj();
+                            continue;
+                        }
+
+                        if (Lokalizacje.listaMiast.ContainsKey(miasto))
+                        {
+                            wspolrzedne = Lokalizacje.WspolrzedneMiasta(miasto);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nPodanego miasta nie ma na liscie.");
+                            obl.Kontynuuj();
+                            continue;
+                        }
+
+                        Lokalizacje.listaMiast.Remove(miasto);
+                        Console.WriteLine($"\nUsunieto lokalizacje: {miasto}");
+                        obl.Kontynuuj();
                         break;
-                    case 10:
+                    case 11: // Wyczysc wszytkie lokalizacje
                         Console.Clear();
-
+                        Console.WriteLine("Jestes pewny, ze chcesz usunac wszystkie lokalizacje? Wpisz [Y], aby potwierdzic.");
+                        if (Console.ReadLine() == "Y")
+                            Lokalizacje.listaMiast.Clear();
+                        Console.WriteLine("\nLista lokalizacji zostala wyczyszczona.");
+                        obl.Kontynuuj();
                         break;
-                    case 11:
+                    case 12:
                         Console.Clear();
                         Console.WriteLine($"Podaj dzien z {obl.data.Month} miesiaca:");
                         int input;
@@ -210,7 +383,7 @@ namespace WschodyZachodySlonca
                             }
                         }
                         break;
-                    case 12:
+                    case 13:
                         Console.Clear();
                         for (int i = 1; i <= 31; i++)
                         {
@@ -233,7 +406,7 @@ namespace WschodyZachodySlonca
                         }
                         obl.Kontynuuj();
                         break;
-                    case 13:
+                    case 14:
                         Console.Clear();
                         for (int i = 1; i <= 12; i++)
                         {
@@ -260,13 +433,13 @@ namespace WschodyZachodySlonca
                         }
                         obl.Kontynuuj();
                         break;
-                    case 14:
+                    case 15:
                         Obliczenia.korekcjaBledu = !Obliczenia.korekcjaBledu;
                         break;
-                    case 15:
+                    case 16:
                         Info();
                         break;
-                    case 16:
+                    case 17:
                         return;
                     case 999:
                         Console.ReadLine();

@@ -328,7 +328,7 @@
         /// </summary>
         public void Kontynuuj()
         {
-            Console.WriteLine("Nacisnij Enter, aby kontynuowac...");
+            Console.WriteLine("\nNacisnij Enter, aby kontynuowac...");
             Console.ReadLine();
         }
 
@@ -357,7 +357,7 @@
 
                 data = data.Date.AddYears(rok - data.Year).AddMonths(miesiac - data.Month);
 
-                Console.WriteLine($"Nowa data to: {data.Year}.{data.Month}\n");
+                Console.WriteLine($"Nowa data to: {data.Year}.{data.Month}");
                 Kontynuuj();
                 break;
             }

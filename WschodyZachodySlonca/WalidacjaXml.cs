@@ -32,6 +32,7 @@ public class WalidacjaXml
             Console.WriteLine($"\nLiczba wykrytych bledow: {fail}");
             Console.WriteLine("\nWalidacja plikow xml nie powiodla sie!");
             Console.ResetColor();
+            fail = 0;
             return false;
         }
 
