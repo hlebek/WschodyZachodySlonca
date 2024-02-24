@@ -86,7 +86,6 @@ namespace WschodyZachodySlonca
                     case 4: // Wybierz lokalizacje
                         if (!Lokalizacje.WyswietlListeMiast())
                             continue;
-                        obl.Kontynuuj();
 
                         Console.WriteLine("\nPodaj nazwe lokalizacji:");
                         string miasto = Console.ReadLine();
@@ -181,9 +180,21 @@ namespace WschodyZachodySlonca
                         break;
                     case 7: // Wczytaj lokalizacje
                         Console.Clear();
-                        Console.WriteLine("Podaj nazwe pliku xml bez rozszerzenia do wczytania:");
+                        Console.WriteLine("Podaj nazwe pliku xml do wczytania:");
                         nazwaPliku = Console.ReadLine();
-                        nazwaPliku = nazwaPliku + ".xml";
+
+                        if (nazwaPliku.Length >= 5)
+                        {
+                            if (nazwaPliku.Remove(0, nazwaPliku.Length - 4).Contains(".xml")) { }
+                            else
+                            {
+                                nazwaPliku = nazwaPliku + ".xml";
+                            }
+                        }
+                        else
+                        {
+                            nazwaPliku = nazwaPliku + ".xml";
+                        }
 
                         if (string.IsNullOrEmpty(nazwaPliku) || string.IsNullOrWhiteSpace(nazwaPliku) || !File.Exists(nazwaPliku) || nazwaPliku.Contains(" "))
                         {
@@ -356,8 +367,14 @@ namespace WschodyZachodySlonca
                         Console.Clear();
                         Console.WriteLine("Jestes pewny, ze chcesz usunac wszystkie lokalizacje? Wpisz [Y], aby potwierdzic.");
                         if (Console.ReadLine() == "Y")
+                        {
                             Lokalizacje.listaMiast.Clear();
-                        Console.WriteLine("\nLista lokalizacji zostala wyczyszczona.");
+                            Console.WriteLine("\nLista lokalizacji zostala wyczyszczona.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Przerwano akcje.");
+                        }
                         obl.Kontynuuj();
                         break;
                     case 12: // Zwaliduj poprawnosc xmlki

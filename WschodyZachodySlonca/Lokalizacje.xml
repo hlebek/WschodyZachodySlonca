@@ -130,7 +130,7 @@
     <SzerokoscGeo>35.69</SzerokoscGeo>
   </Miejscowosc>
 
-  <Miejscowosc Nazwa="Nowe Delhi">
+  <Miejscowosc Nazwa="Nowedelhi">
     <DlugoscGeo>77.23</DlugoscGeo>
     <SzerokoscGeo>28.61</SzerokoscGeo>
   </Miejscowosc>
@@ -140,7 +140,7 @@
     <SzerokoscGeo>13.71</SzerokoscGeo>
   </Miejscowosc>
 
-  <Miejscowosc Nazwa="Hong Kong">
+  <Miejscowosc Nazwa="Hongkong">
     <DlugoscGeo>114.17</DlugoscGeo>
     <SzerokoscGeo>22.31</SzerokoscGeo>
   </Miejscowosc>
@@ -215,7 +215,7 @@
     <SzerokoscGeo>19.43</SzerokoscGeo>
   </Miejscowosc>
 
-  <Miejscowosc Nazwa="Nowy Jork">
+  <Miejscowosc Nazwa="Nowyjork">
     <DlugoscGeo>-73.96</DlugoscGeo>
     <SzerokoscGeo>40.62</SzerokoscGeo>
   </Miejscowosc>
@@ -245,12 +245,12 @@
     <SzerokoscGeo>47.60</SzerokoscGeo>
   </Miejscowosc>
 
-  <Miejscowosc Nazwa="San Francisco">
+  <Miejscowosc Nazwa="Sanfrancisco">
     <DlugoscGeo>-122.44</DlugoscGeo>
     <SzerokoscGeo>37.76</SzerokoscGeo>
   </Miejscowosc>
 
-  <Miejscowosc Nazwa="Los Angeles">
+  <Miejscowosc Nazwa="Losangeles">
     <DlugoscGeo>-118.24</DlugoscGeo>
     <SzerokoscGeo>34.05</SzerokoscGeo>
   </Miejscowosc>

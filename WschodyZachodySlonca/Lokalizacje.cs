@@ -98,10 +98,11 @@ namespace WschodyZachodySlonca
 
                     foreach (var ite in item.Value)
                     {
-                        Console.WriteLine(string.Format("{0,-15} - {1,-7}°N {2,-8}°E", item.Key, ite.Key, ite.Value));
+                        Console.WriteLine(string.Format("{0,-15} = {1,-7}°N {2,-8}°E", item.Key, ite.Key, ite.Value));
                     }
                     i++;
                 }
+                Console.ResetColor();
                 return true;
             }
             else
