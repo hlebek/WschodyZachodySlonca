@@ -62,7 +62,7 @@ namespace WschodyZachodySlonca
                     if (x == double.MaxValue || y == double.MaxValue)
                         continue;
 
-                    wspolrzedne.Add((double)x, (double)y);
+                    wspolrzedne.Add((double)y, (double)x);
 
                     foreach (XmlAttribute attr in atrybut)
                     {
@@ -88,12 +88,19 @@ namespace WschodyZachodySlonca
             Console.Clear();
             if (listaMiast.Count > 0)
             {
+                int i = 1;
                 foreach (var item in listaMiast)
                 {
+                    if (i % 2 == 0)
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                    else
+                        Console.ResetColor();
+
                     foreach (var ite in item.Value)
                     {
-                        Console.WriteLine(item.Key + " - " + ite.Key + "°N " + ite.Value + "°E");
+                        Console.WriteLine(string.Format("{0,-15} - {1,-7}°N {2,-8}°E", item.Key, ite.Key, ite.Value));
                     }
+                    i++;
                 }
                 return true;
             }

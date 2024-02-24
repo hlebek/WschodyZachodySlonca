@@ -110,6 +110,9 @@ namespace WschodyZachodySlonca
 
                         obl.UstawWspolrzedneGeo(wspolrzedne[0], wspolrzedne[1]);
                         break;
+                    
+                        // TODO
+                        // Zrobic, ze jak ktos podaje nazwe, ktora juz jest to informuje o tym
                     case 5: // Dodaj lokalizacje
                         Console.Clear();
                         Console.WriteLine("Podaj nazwe nowej lokalizacji:");
