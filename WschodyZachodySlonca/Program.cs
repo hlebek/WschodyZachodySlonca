@@ -9,19 +9,25 @@ namespace WschodyZachodySlonca
                     "\n2. Zmien date" +
                     "\n3. Zmien wspolrzedne geograficzne" +
                     "\n4. Wybierz lokalizacje" +
-                    "\n5. Dodaj lokalizacje" +
-                    "\n6. Zapisz lokalizacje" +
-                    "\n7. Wczytaj lokalizacje" +
-                    "\n8. Edytuj lokalizacje" +
-                    "\n9. Wyswietl lokalizacje" +
+                    "\n5. Dodaj lokalizacje do listy" +
+                    "\n6. Zapisz lokalizacje do pliku" +
+                    "\n7. Wczytaj lokalizacje z pliku" +
+                    "\n8. Edytuj wybrana lokalizacje" +
+                    "\n9. Wyswietl liste lokalizacji" +
                     "\n10. Usun lokalizacje" +
-                    "\n11. Wyczysc wszytkie lokalizacje" +
-                    "\n12. Oblicz wschod i zachod slonca dla danego dnia" +
-                    "\n13. Oblicz wschod i zachod slonca dla calego miesiaca" +
-                    "\n14. Oblicz wschod i zachod slonca dla calego roku" +
-                    "\n15. Zmien ustawienie korekcji bledu zalamania swiatla" +
-                    "\n16. Info o programie\n" +
-                    "\n17. Wyjdz z programu.\n";
+                    "\n11. Usun wszytkie lokalizacje" +
+                    "\n12. Zwaliduj xml-ke" +
+                    "\n13. Oblicz wschod i zachod slonca dla danego dnia" +
+                    "\n14. Oblicz wschod i zachod slonca dla calego miesiaca" +
+                    "\n15. Oblicz wschod i zachod slonca dla calego roku" +
+                    "\n16. Zmien ustawienie korekcji bledu zalamania swiatla" +
+                    "\n17. Info o programie\n" +
+                    "\n18. Wyjdz z programu.\n";
+
+
+        // TODO
+        // Dodac opcje, ze przy podawaniu nazwy xmlki akceptuje format z .xml w nazwie i bez. Tak jak dla pkt. 12 - walidacja xml
+        // (ifem sprawdzac czy jest to rozszerzenie podane i jak tak to nic nie robic, a jak nie to dodac albo cos w ten desen)
 
         const int minOpcji = 1;
         static int maxOpcji = opcjeMenu.Count(c => c.Equals('\n')) - 2;
@@ -354,7 +360,60 @@ namespace WschodyZachodySlonca
                         Console.WriteLine("\nLista lokalizacji zostala wyczyszczona.");
                         obl.Kontynuuj();
                         break;
-                    case 12:
+                    case 12: // Zwaliduj poprawnosc xmlki
+                        Console.Clear();
+                        Console.WriteLine("Podaj nazwe/sciezke do xml-ki (bez spacji):");
+                        string zwalidujXmlSciezka = Console.ReadLine();
+
+                        if (!string.IsNullOrEmpty(zwalidujXmlSciezka) && !string.IsNullOrWhiteSpace(zwalidujXmlSciezka))
+                        {
+                            if (zwalidujXmlSciezka.Length >= 5)
+                            {
+                                if (zwalidujXmlSciezka.Remove(0, zwalidujXmlSciezka.Length - 4).Contains(".xml")) { }
+                                else
+                                {
+                                    zwalidujXmlSciezka = zwalidujXmlSciezka + ".xml";
+                                }
+                            }
+                            else
+                            {
+                                zwalidujXmlSciezka = zwalidujXmlSciezka + ".xml";
+                            }
+
+                            if (File.Exists(zwalidujXmlSciezka))
+                            {
+                                List<string> zwalidujXmlSciezkaList = new List<string>();
+                                zwalidujXmlSciezkaList.Add(zwalidujXmlSciezka);
+                                if (WalidacjaXml.WalidujXml(zwalidujXmlSciezkaList))
+                                {
+                                    Console.Clear();
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("Walidacja powiodla sie. Brak wykrytych bledow w pliku.");
+                                    Console.ResetColor();
+                                    obl.Kontynuuj();
+                                    break;
+                                }
+                                else
+                                {
+                                    obl.Kontynuuj();
+                                    break;
+                                }    
+                            }
+                            else
+                            {
+                                Console.WriteLine("Nie znaleziono pliku.");
+                                obl.Kontynuuj();
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Niepoprawna nazwa.");
+                            obl.Kontynuuj();
+                            break;
+                        }
+                    case 13:
                         Console.Clear();
                         Console.WriteLine($"Podaj dzien z {obl.data.Month} miesiaca:");
                         int input;
@@ -386,7 +445,7 @@ namespace WschodyZachodySlonca
                             }
                         }
                         break;
-                    case 13:
+                    case 14:
                         Console.Clear();
                         for (int i = 1; i <= 31; i++)
                         {
@@ -409,7 +468,7 @@ namespace WschodyZachodySlonca
                         }
                         obl.Kontynuuj();
                         break;
-                    case 14:
+                    case 15:
                         Console.Clear();
                         for (int i = 1; i <= 12; i++)
                         {
@@ -436,13 +495,13 @@ namespace WschodyZachodySlonca
                         }
                         obl.Kontynuuj();
                         break;
-                    case 15:
+                    case 16:
                         Obliczenia.korekcjaBledu = !Obliczenia.korekcjaBledu;
                         break;
-                    case 16:
+                    case 17:
                         Info();
                         break;
-                    case 17:
+                    case 18:
                         return;
                     case 999:
                         Console.ReadLine();
